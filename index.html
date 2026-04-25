@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KrishiNetra – Intelligent Crop Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-50: #EAF3DE; --green-100: #C0DD97; --green-200: #97C459;
+    --green-400: #639922; --green-600: #3B6D11; --green-800: #27500A; --green-900: #173404;
+    --amber-50: #FAEEDA; --amber-100: #FAC775; --amber-200: #EF9F27;
+    --amber-400: #BA7517; --amber-600: #854F0B; --amber-800: #633806;
+    --teal-50: #E1F5EE; --teal-100: #9FE1CB; --teal-200: #5DCAA5;
+    --teal-400: #1D9E75; --teal-600: #0F6E56; --teal-800: #085041;
+    --gray-50: #F1EFE8; --gray-100: #D3D1C7; --gray-200: #B4B2A9;
+    --gray-400: #888780; --gray-600: #5F5E5A; --gray-800: #444441; --gray-900: #2C2C2A;
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --text-primary: #1A1A16;
+    --text-muted: #5F5E5A;
+    --border: rgba(0,0,0,0.08);
+    --radius: 14px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.06);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text-primary); min-height:100vh; }
+
+  /* ── NAV ── */
+  nav { background:var(--surface); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; }
+  .logo { display:flex; align-items:center; gap:10px; font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--green-800); text-decoration:none; }
+  .logo-icon { width:36px; height:36px; background:var(--green-600); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  nav ul { list-style:none; display:flex; gap:4px; }
+  nav ul li a { text-decoration:none; color:var(--text-muted); font-size:0.88rem; font-weight:500; padding:6px 14px; border-radius:8px; transition:all .2s; cursor:pointer; }
+  nav ul li a:hover, nav ul li a.active { background:var(--green-50); color:var(--green-800); }
+  .nav-cta { background:var(--green-600); color:#fff !important; border-radius:8px !important; }
+  .nav-cta:hover { background:var(--green-800) !important; color:#fff !important; }
+  .hamburger { display:none; flex-direction:column; gap:4px; cursor:pointer; padding:4px; }
+  .hamburger span { width:22px; height:2px; background:var(--text-primary); border-radius:2px; }
+
+  /* ── PAGES ── */
+  .page { display:none; }
+  .page.active { display:block; }
+
+  /* ── HOME ── */
+  .hero { background: linear-gradient(135deg, #1a3a0a 0%, #2d5a14 50%, #1D9E75 100%); color:#fff; padding:5rem 2rem; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+  .hero-content { position:relative; max-width:700px; margin:0 auto; }
+  .hero-badge { display:inline-block; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); padding:6px 16px; border-radius:30px; font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; margin-bottom:1.5rem; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:3.2rem; font-weight:700; line-height:1.15; margin-bottom:1rem; }
+  .hero h1 span { color:var(--amber-100); }
+  .hero p { font-size:1.1rem; color:rgba(255,255,255,0.8); margin-bottom:2rem; line-height:1.7; }
+  .hero-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn-primary { background:#fff; color:var(--green-800); padding:12px 28px; border-radius:10px; font-weight:600; border:none; cursor:pointer; font-size:0.95rem; transition:all .2s; }
+  .btn-primary:hover { background:var(--amber-50); transform:translateY(-1px); }
+  .btn-outline { background:transparent; color:#fff; padding:12px 28px; border-radius:10px; font-weight:500; border:1.5px solid rgba(255,255,255,0.4); cursor:pointer; font-size:0.95rem; transition:all .2s; }
+  .btn-outline:hover { background:rgba(255,255,255,0.1); }
+  .stats-strip { display:grid; grid-template-columns:repeat(4,1fr); max-width:900px; margin:3rem auto 0; gap:1px; background:rgba(255,255,255,0.15); border-radius:14px; overflow:hidden; }
+  .stat-item { padding:1.5rem; text-align:center; background:rgba(255,255,255,0.07); }
+  .stat-item h3 { font-size:2rem; font-weight:700; font-family:'Playfair Display',serif; }
+  .stat-item p { font-size:0.78rem; color:rgba(255,255,255,0.7); margin-top:4px; }
+  .features { max-width:1100px; margin:4rem auto; padding:0 2rem; }
+  .section-title { font-family:'Playfair Display',serif; font-size:2rem; color:var(--green-800); margin-bottom:0.5rem; }
+  .section-sub { color:var(--text-muted); margin-bottom:2.5rem; font-size:0.95rem; }
+  .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+  .feature-card { background:var(--surface); border-radius:var(--radius); padding:1.75rem; border:1px solid var(--border); transition:all .3s; cursor:pointer; }
+  .feature-card:hover { transform:translateY(-4px); box-shadow:var(--shadow); border-color:var(--green-100); }
+  .feature-icon { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:1rem; }
+  .feature-card h3 { font-size:1.05rem; font-weight:600; margin-bottom:0.5rem; }
+  .feature-card p { font-size:0.88rem; color:var(--text-muted); line-height:1.6; }
+
+  /* ── AUTH ── */
+  .auth-container { min-height:calc(100vh - 64px); display:flex; align-items:center; justify-content:center; padding:2rem; }
+  .auth-card { background:var(--surface); border-radius:20px; padding:2.5rem; width:100%; max-width:440px; border:1px solid var(--border); box-shadow:var(--shadow); }
+  .auth-card h2 { font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--green-800); margin-bottom:0.25rem; }
+  .auth-card p.sub { color:var(--text-muted); font-size:0.88rem; margin-bottom:2rem; }
+  .form-group { margin-bottom:1.25rem; }
+  .form-group label { display:block; font-size:0.82rem; font-weight:500; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
+  .form-group input, .form-group select, .form-group textarea { width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:0.92rem; background:var(--bg); color:var(--text-primary); outline:none; font-family:inherit; transition:border .2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--green-400); background:#fff; }
+  .btn-full { width:100%; padding:13px; background:var(--green-600); color:#fff; border:none; border-radius:10px; font-size:0.95rem; font-weight:600; cursor:pointer; transition:all .2s; font-family:inherit; }
+  .btn-full:hover { background:var(--green-800); }
+  .auth-toggle { text-align:center; margin-top:1.25rem; font-size:0.88rem; color:var(--text-muted); }
+  .auth-toggle span { color:var(--green-600); cursor:pointer; font-weight:500; }
+
+  /* ── DASHBOARD ── */
+  .dash-layout { display:grid; grid-template-columns:240px 1fr; min-height:calc(100vh - 64px); }
+  .sidebar { background:var(--surface); border-right:1px solid var(--border); padding:1.5rem 1rem; }
+  .sidebar-user { display:flex; align-items:center; gap:10px; padding:12px; margin-bottom:1.5rem; background:var(--green-50); border-radius:12px; }
+  .user-avatar { width:38px; height:38px; background:var(--green-600); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:14px; flex-shrink:0; }
+  .sidebar-user .info { font-size:0.82rem; }
+  .sidebar-user .info strong { display:block; font-weight:600; color:var(--text-primary); }
+  .sidebar-user .info span { color:var(--text-muted); }
+  .sidebar-nav { list-style:none; }
+  .sidebar-nav li a { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; color:var(--text-muted); font-size:0.88rem; font-weight:500; text-decoration:none; transition:all .2s; cursor:pointer; margin-bottom:2px; }
+  .sidebar-nav li a:hover, .sidebar-nav li a.active { background:var(--green-50); color:var(--green-800); }
+  .sidebar-nav li a span.icon { font-size:18px; }
+  .dash-content { padding:2rem; overflow-y:auto; }
+  .dash-header { margin-bottom:2rem; }
+  .dash-header h2 { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--green-800); }
+  .dash-header p { color:var(--text-muted); font-size:0.88rem; }
+  .metrics-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:2rem; }
+  .metric-card { background:var(--surface); border-radius:12px; padding:1.25rem; border:1px solid var(--border); }
+  .metric-card .label { font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+  .metric-card .value { font-size:1.6rem; font-weight:700; font-family:'Playfair Display',serif; }
+  .metric-card .delta { font-size:0.78rem; margin-top:4px; }
+  .delta-up { color:var(--teal-400); } .delta-down { color:#E24B4A; }
+  .card { background:var(--surface); border-radius:var(--radius); padding:1.5rem; border:1px solid var(--border); margin-bottom:1.5rem; }
+  .card h3 { font-size:1rem; font-weight:600; margin-bottom:1rem; display:flex; align-items:center; gap:8px; }
+
+  /* ── PANEL system ── */
+  .dash-panel { display:none; }
+  .dash-panel.active { display:block; }
+
+  /* ── SCAN ── */
+  .upload-zone { border:2px dashed var(--green-200); border-radius:16px; padding:3rem 2rem; text-align:center; cursor:pointer; transition:all .3s; background:var(--green-50); }
+  .upload-zone:hover { border-color:var(--green-400); background:#fff; }
+  .upload-zone input[type=file] { display:none; }
+  .upload-zone .uz-icon { font-size:3rem; margin-bottom:1rem; }
+  .upload-zone h3 { font-size:1rem; font-weight:600; margin-bottom:0.5rem; }
+  .upload-zone p { font-size:0.85rem; color:var(--text-muted); }
+  .preview-img { max-width:100%; border-radius:12px; margin-top:1rem; max-height:300px; object-fit:cover; display:none; }
+  .progress-bar { height:6px; background:var(--green-50); border-radius:3px; overflow:hidden; margin:1rem 0; display:none; }
+  .progress-fill { height:100%; background:var(--green-400); border-radius:3px; transition:width .4s ease; width:0%; }
+  .result-card { background:var(--green-50); border:1px solid var(--green-100); border-radius:12px; padding:1.25rem; margin-top:1rem; display:none; }
+  .result-card h4 { color:var(--green-800); font-size:0.95rem; margin-bottom:0.75rem; }
+  .result-row { display:flex; justify-content:space-between; font-size:0.88rem; padding:6px 0; border-bottom:1px solid var(--green-100); }
+  .result-row:last-child { border:none; }
+  .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; }
+  .badge-green { background:var(--green-100); color:var(--green-800); }
+  .badge-amber { background:var(--amber-50); color:var(--amber-600); }
+  .badge-red { background:#FCEBEB; color:#A32D2D; }
+
+  /* ── YIELD ── */
+  .yield-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .yield-result { background: linear-gradient(135deg, var(--green-600), var(--teal-400)); color:#fff; border-radius:16px; padding:2rem; text-align:center; }
+  .yield-result .big-num { font-family:'Playfair Display',serif; font-size:3rem; font-weight:700; }
+  .yield-result .unit { font-size:0.88rem; opacity:0.85; }
+  .yield-result .sub { font-size:0.82rem; opacity:0.75; margin-top:6px; }
+  .confidence-bar { margin-top:1rem; }
+  .conf-label { font-size:0.78rem; opacity:0.8; margin-bottom:4px; display:flex; justify-content:space-between; }
+  .conf-track { height:8px; background:rgba(255,255,255,0.25); border-radius:4px; overflow:hidden; }
+  .conf-fill { height:100%; background:#fff; border-radius:4px; transition:width .8s ease; }
+  .factor-list { margin-top:0.75rem; }
+  .factor-item { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.88rem; }
+  .factor-item:last-child { border:none; }
+  .factor-bar-wrap { width:120px; height:6px; background:var(--green-50); border-radius:3px; overflow:hidden; }
+  .factor-bar-fill { height:100%; border-radius:3px; background:var(--green-400); }
+
+  /* ── CROPS TABLE ── */
+  .crop-table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+  th { background:var(--green-50); padding:10px 14px; text-align:left; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--green-800); }
+  td { padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  tr:hover td { background:var(--bg); }
+  .suitability { display:flex; align-items:center; gap:8px; }
+  .suit-bar { flex:1; height:6px; background:var(--gray-100); border-radius:3px; overflow:hidden; max-width:80px; }
+  .suit-fill { height:100%; border-radius:3px; }
+
+  /* ── SHOP ── */
+  .product-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.25rem; }
+  .product-card { background:var(--surface); border-radius:var(--radius); border:1px solid var(--border); overflow:hidden; transition:all .2s; }
+  .product-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+  .product-img { height:140px; display:flex; align-items:center; justify-content:center; font-size:4rem; }
+  .product-info { padding:1rem; }
+  .product-info h4 { font-size:0.95rem; font-weight:600; margin-bottom:4px; }
+  .product-info p { font-size:0.82rem; color:var(--text-muted); margin-bottom:10px; }
+  .product-price { font-size:1.1rem; font-weight:700; color:var(--green-600); }
+  .btn-sm { padding:7px 16px; border-radius:8px; font-size:0.82rem; font-weight:600; border:none; cursor:pointer; transition:all .2s; font-family:inherit; }
+  .btn-green { background:var(--green-600); color:#fff; } .btn-green:hover { background:var(--green-800); }
+  .btn-amber { background:var(--amber-200); color:var(--amber-800); } .btn-amber:hover { background:var(--amber-400); color:#fff; }
+  .cart-badge { background:#E24B4A; color:#fff; border-radius:50%; width:18px; height:18px; font-size:10px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; margin-left:4px; }
+
+  /* ── PAYMENT MODAL ── */
+  .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; align-items:center; justify-content:center; }
+  .modal-backdrop.open { display:flex; }
+  .modal { background:var(--surface); border-radius:20px; padding:2rem; width:90%; max-width:480px; }
+  .modal h3 { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--green-800); margin-bottom:1.5rem; }
+  .payment-icons { display:flex; gap:8px; margin-bottom:1.25rem; flex-wrap:wrap; }
+  .pay-icon { padding:6px 14px; border:1.5px solid var(--border); border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all .2s; }
+  .pay-icon.selected { border-color:var(--green-400); background:var(--green-50); color:var(--green-800); }
+  .modal-btns { display:flex; gap:10px; margin-top:1.5rem; }
+  .btn-cancel { background:var(--bg); color:var(--text-muted); border:1px solid var(--border); padding:11px 20px; border-radius:10px; cursor:pointer; font-family:inherit; font-size:0.9rem; }
+  .success-msg { display:none; text-align:center; padding:1.5rem 0; }
+  .success-msg .checkmark { font-size:3rem; margin-bottom:0.75rem; }
+  .success-msg h4 { font-size:1.1rem; font-weight:600; color:var(--green-800); }
+
+  /* ── FAQ ── */
+  .faq-search { width:100%; padding:12px 18px; border:1.5px solid var(--border); border-radius:12px; font-size:0.95rem; background:var(--surface); outline:none; font-family:inherit; margin-bottom:1.5rem; }
+  .faq-search:focus { border-color:var(--green-400); }
+  .faq-item { border:1px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden; background:var(--surface); }
+  .faq-q { padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-size:0.92rem; font-weight:500; }
+  .faq-q:hover { background:var(--green-50); }
+  .faq-q .chevron { font-size:12px; transition:transform .3s; color:var(--text-muted); }
+  .faq-item.open .chevron { transform:rotate(180deg); }
+  .faq-a { display:none; padding:0 18px 14px; font-size:0.88rem; color:var(--text-muted); line-height:1.7; }
+  .faq-item.open .faq-a { display:block; }
+  .faq-tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.72rem; font-weight:600; margin-right:6px; background:var(--green-50); color:var(--green-800); }
+  .no-results { text-align:center; color:var(--text-muted); padding:2rem; display:none; }
+
+  /* ── CHAT ── */
+  .chat-container { height:calc(100vh - 200px); display:flex; flex-direction:column; }
+  .chat-messages { flex:1; overflow-y:auto; padding:1rem; display:flex; flex-direction:column; gap:12px; }
+  .chat-msg { max-width:75%; padding:10px 14px; border-radius:14px; font-size:0.88rem; line-height:1.6; }
+  .chat-msg.bot { background:var(--green-50); color:var(--text-primary); align-self:flex-start; border-bottom-left-radius:4px; }
+  .chat-msg.user { background:var(--green-600); color:#fff; align-self:flex-end; border-bottom-right-radius:4px; }
+  .chat-input-row { display:flex; gap:10px; padding:1rem; border-top:1px solid var(--border); background:var(--surface); border-radius:0 0 var(--radius) var(--radius); }
+  .chat-input { flex:1; padding:10px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:0.9rem; outline:none; font-family:inherit; }
+  .chat-input:focus { border-color:var(--green-400); }
+  .chat-send { padding:10px 18px; background:var(--green-600); color:#fff; border:none; border-radius:10px; cursor:pointer; font-weight:600; font-size:0.88rem; }
+
+  /* ── TOAST ── */
+  .toast { position:fixed; bottom:1.5rem; right:1.5rem; background:var(--green-800); color:#fff; padding:12px 20px; border-radius:12px; font-size:0.88rem; font-weight:500; z-index:999; transform:translateY(80px); opacity:0; transition:all .3s; }
+  .toast.show { transform:translateY(0); opacity:1; }
+
+  /* ── PROFILE & AUTH SIDEBAR ── */
+  .sidebar-profile { padding:1rem; margin-bottom:1rem; background:var(--green-50); border-radius:12px; }
+  .profile-avatar-wrap { position:relative; display:inline-block; margin-bottom:8px; }
+  .profile-avatar-large { width:64px; height:64px; border-radius:50%; background:var(--green-600); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:22px; overflow:hidden; }
+  .profile-avatar-large img { width:100%; height:100%; object-fit:cover; }
+  .avatar-edit-btn { position:absolute; bottom:0; right:0; width:20px; height:20px; background:var(--amber-200); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:10px; border:2px solid #fff; }
+  .profile-name { font-weight:600; font-size:0.9rem; color:var(--text-primary); }
+  .profile-role { font-size:0.75rem; color:var(--text-muted); }
+  .sidebar-logout { display:flex; align-items:center; gap:8px; padding:9px 12px; border-radius:10px; color:#A32D2D; font-size:0.85rem; font-weight:500; cursor:pointer; background:transparent; border:1px solid #FCEBEB; width:100%; margin-top:6px; transition:all .2s; }
+  .sidebar-logout:hover { background:#FCEBEB; }
+  .sidebar-login { display:flex; align-items:center; gap:8px; padding:9px 12px; border-radius:10px; color:var(--green-800); font-size:0.85rem; font-weight:600; cursor:pointer; background:var(--green-100); border:none; width:100%; margin-top:6px; transition:all .2s; }
+  .sidebar-login:hover { background:var(--green-200); }
+
+  /* ── CROP SUGGESTIONS DROPDOWN ── */
+  .filter-select-wrap { position:relative; }
+  .filter-select-wrap select { appearance:none; -webkit-appearance:none; width:100%; padding:10px 36px 10px 14px; border:1.5px solid var(--border); border-radius:10px; font-size:0.88rem; font-family:inherit; background:var(--surface); color:var(--text-primary); cursor:pointer; outline:none; transition:border .2s; }
+  .filter-select-wrap select:focus { border-color:var(--green-400); }
+  .filter-select-wrap::after { content:'▼'; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:10px; color:var(--text-muted); pointer-events:none; }
+  .filter-label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:600; margin-bottom:6px; }
+
+  /* ── PLAN MODAL ── */
+  .plan-modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; align-items:center; justify-content:center; }
+  .plan-modal-backdrop.open { display:flex; }
+  .plan-modal { background:var(--surface); border-radius:20px; padding:2rem; width:90%; max-width:560px; max-height:90vh; overflow-y:auto; }
+  .plan-modal h3 { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--green-800); margin-bottom:1rem; }
+  .plan-section { margin-bottom:1.25rem; }
+  .plan-section h4 { font-size:0.88rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin-bottom:8px; }
+  .plan-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.88rem; }
+  .plan-row:last-child { border:none; }
+  .plan-tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; background:var(--green-50); color:var(--green-800); margin:3px; }
+
+  /* ── CHECKOUT FLOW ── */
+  .checkout-step { display:none; }
+  .checkout-step.active { display:block; }
+  .address-form .form-group input, .address-form .form-group select { background:#fff; }
+  .qr-wrap { text-align:center; padding:1.5rem 0; }
+  .qr-code { width:160px; height:160px; background:white; border:3px solid var(--green-200); border-radius:12px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; padding:8px; }
+  .qr-code svg { width:100%; height:100%; }
+  .upi-id-box { background:var(--green-50); border:1px solid var(--green-100); border-radius:8px; padding:10px 16px; font-family:'JetBrains Mono',monospace; font-size:0.9rem; color:var(--green-800); margin:8px auto; display:inline-block; }
+
+  /* ── PIE CHART COLORS ── */
+  .pie-legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; justify-content:center; }
+  .pie-legend-item { display:flex; align-items:center; gap:6px; font-size:0.8rem; }
+  .pie-legend-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+
+  @media(max-width:768px) {
+    .dash-layout { grid-template-columns:1fr; }
+    .sidebar { display:none; }
+    .stats-strip { grid-template-columns:repeat(2,1fr); }
+    .hero h1 { font-size:2.2rem; }
+    .yield-grid { grid-template-columns:1fr; }
+    nav ul { display:none; }
+    .hamburger { display:flex; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" onclick="goPage('home')">
+    <div class="logo-icon">🌿</div>
+    KrishiNetra
+  </a>
+  <ul id="nav-links">
+    <li><a onclick="goPage('home')" class="active" id="nav-home">Home</a></li>
+    <li><a onclick="goPage('dashboard')" id="nav-dashboard">Dashboard</a></li>
+    <li><a onclick="showPanel('scan')" id="nav-scan">Scan Crop</a></li>
+    <li><a onclick="showPanel('shop')" id="nav-shop">Buy Fertilizer</a></li>
+    <li><a onclick="showPanel('faq')" id="nav-faq">Help</a></li>
+    <li id="nav-auth-li"><a onclick="goPage('auth')" class="nav-cta" id="nav-auth-btn">Login</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ═══════════════ HOME PAGE ═══════════════ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">🇮🇳 Made for Indian Farmers</div>
+      <h1>See Smarter,<br><span>Farm Better</span></h1>
+      <p>KrishiNetra uses AI-powered crop scanning, Random Forest yield prediction, and real-time climate analytics to maximize your agricultural output.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="goPage('auth')">Get Started Free</button>
+        <button class="btn-outline" onclick="goPage('dashboard')">View Dashboard</button>
+      </div>
+      <div class="stats-strip">
+        <div class="stat-item"><h3>94%</h3><p>Prediction Accuracy</p></div>
+        <div class="stat-item"><h3>12K+</h3><p>Farmers Onboarded</p></div>
+        <div class="stat-item"><h3>38</h3><p>Crop Varieties</p></div>
+        <div class="stat-item"><h3>3.2×</h3><p>Yield Improvement</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features">
+    <p class="section-title">Everything your farm needs</p>
+    <p class="section-sub">Six intelligent modules working together for precision agriculture</p>
+    <div class="feature-grid">
+      <div class="feature-card" onclick="goPage('dashboard');showPanel('scan')">
+        <div class="feature-icon" style="background:var(--green-50)">🔬</div>
+        <h3>AI Crop Scanning</h3>
+        <p>Upload a photo and our CNN model identifies crop type, detects disease, and recommends treatment within seconds.</p>
+      </div>
+      <div class="feature-card" onclick="goPage('dashboard');showPanel('yield')">
+        <div class="feature-icon" style="background:var(--amber-50)">📈</div>
+        <h3>Yield Prediction</h3>
+        <p>Input climate and soil parameters. Our Random Forest model predicts yield with 94% accuracy based on historical data.</p>
+      </div>
+      <div class="feature-card" onclick="goPage('dashboard');showPanel('crops')">
+        <div class="feature-icon" style="background:var(--teal-50)">🌾</div>
+        <h3>Crop Suggestions</h3>
+        <p>Data-driven recommendations on which crops to plant based on your local weather, soil pH, and seasonal trends.</p>
+      </div>
+      <div class="feature-card" onclick="goPage('dashboard');showPanel('shop')">
+        <div class="feature-icon" style="background:#FBEAF0">🛒</div>
+        <h3>Fertilizer Market</h3>
+        <p>Browse AI-recommended fertilizers and purchase directly through our integrated payment gateway.</p>
+      </div>
+      <div class="feature-card" onclick="goPage('dashboard');showPanel('faq')">
+        <div class="feature-icon" style="background:var(--gray-50)">💬</div>
+        <h3>Help Center</h3>
+        <p>Searchable FAQ database with expert answers to common farming, technical, and platform questions.</p>
+      </div>
+      <div class="feature-card" onclick="goPage('dashboard');showPanel('chat')">
+        <div class="feature-icon" style="background:#E6F1FB">🤖</div>
+        <h3>AI Chat Assistant</h3>
+        <p>Get instant answers about crop management, weather patterns, or platform features from our AI assistant.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ AUTH PAGE ═══════════════ -->
+<div class="page" id="page-auth">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <div style="width:56px;height:56px;background:var(--green-600);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:12px">🌿</div>
+      </div>
+      <h2 id="auth-title">Welcome back</h2>
+      <p class="sub" id="auth-sub">Sign in to your KrishiNetra account</p>
+      <div id="auth-form-login">
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="farmer@example.com" id="login-email"></div>
+        <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••" id="login-pass"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;font-size:0.82rem">
+          <label style="display:flex;align-items:center;gap:6px;color:var(--text-muted);cursor:pointer"><input type="checkbox"> Remember me</label>
+          <span style="color:var(--green-600);cursor:pointer">Forgot password?</span>
+        </div>
+        <button class="btn-full" onclick="doLogin()">Sign In</button>
+        <div class="auth-toggle">Don't have an account? <span onclick="toggleAuth()">Register here</span></div>
+      </div>
+      <div id="auth-form-register" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="Rajan"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Kumar"></div>
+        </div>
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="farmer@example.com"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" placeholder="+91 9876543210"></div>
+        <div class="form-group"><label>State</label>
+          <select><option>Karnataka</option><option>Maharashtra</option><option>Punjab</option><option>Uttar Pradesh</option><option>Gujarat</option><option>Rajasthan</option><option>Tamil Nadu</option><option>Andhra Pradesh</option></select>
+        </div>
+        <div class="form-group"><label>Password</label><input type="password" placeholder="min. 8 characters"></div>
+        <button class="btn-full" onclick="doLogin()">Create Account</button>
+        <div class="auth-toggle">Already registered? <span onclick="toggleAuth()">Sign in</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="dash-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- Profile Section -->
+      <div class="sidebar-profile" id="sidebar-profile-section">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar-large" id="sidebarAvatar">
+              <span id="sidebarAvatarInitials">RK</span>
+              <img id="sidebarAvatarImg" src="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%">
+            </div>
+            <div class="avatar-edit-btn" onclick="document.getElementById('avatarFileInput').click()" title="Change photo">✏️</div>
+            <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="updateProfilePicture(event)">
+          </div>
+          <div>
+            <div class="profile-name" id="sidebarName">Rajan Kumar</div>
+            <div class="profile-role" id="sidebarRole">Pro Farmer</div>
+          </div>
+        </div>
+        <button class="sidebar-logout" id="sidebarLogoutBtn" onclick="doLogout()">🚪 Logout</button>
+        <button class="sidebar-login" id="sidebarLoginBtn" onclick="goPage('auth')" style="display:none">🔑 Login / Register</button>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a onclick="showPanel('overview')" class="active" id="sn-overview"><span class="icon">📊</span>Overview</a></li>
+        <li><a onclick="showPanel('scan')" id="sn-scan"><span class="icon">🔬</span>Scan Crop</a></li>
+        <li><a onclick="showPanel('yield')" id="sn-yield"><span class="icon">📈</span>Yield Prediction</a></li>
+        <li><a onclick="showPanel('crops')" id="sn-crops"><span class="icon">🌾</span>Crop Suggestions</a></li>
+        <li><a onclick="showPanel('shop')" id="sn-shop"><span class="icon">🛒</span>Buy Fertilizer <span class="cart-badge" id="cart-count">0</span></a></li>
+        <li><a onclick="showPanel('faq')" id="sn-faq"><span class="icon">❓</span>Help Center</a></li>
+        <li><a onclick="showPanel('chat')" id="sn-chat"><span class="icon">💬</span>AI Assistant</a></li>
+      </ul>
+      <div style="margin-top:auto;padding:1rem 0;border-top:1px solid var(--border);margin-top:2rem">
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px">Current Season</div>
+        <div style="font-size:0.88rem;font-weight:500">Kharif 2025</div>
+        <div style="font-size:0.78rem;color:var(--teal-400);margin-top:2px">● Active</div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="dash-content">
+
+      <!-- Overview Panel -->
+      <div class="dash-panel active" id="panel-overview">
+        <div class="dash-header">
+          <h2>Good morning, Rajan 🌤️</h2>
+          <p>Here's your farm intelligence snapshot for today</p>
+        </div>
+        <div class="metrics-row">
+          <div class="metric-card"><div class="label">Expected Yield</div><div class="value" style="color:var(--green-600)">4.2t</div><div class="delta delta-up">▲ 12% vs last season</div></div>
+          <div class="metric-card"><div class="label">Field Temp</div><div class="value">28°C</div><div class="delta delta-up">Optimal range</div></div>
+          <div class="metric-card"><div class="label">Soil Moisture</div><div class="value">67%</div><div class="delta delta-down">▼ 5% needs water</div></div>
+          <div class="metric-card"><div class="label">Rainfall (7d)</div><div class="value">18mm</div><div class="delta delta-up">▲ Adequate</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem">
+          <div class="card">
+            <h3>📊 Yield Forecast – Kharif Season</h3>
+            <canvas id="yieldChart" height="200"></canvas>
+          </div>
+          <div class="card">
+            <h3>🌡️ Weather Conditions</h3>
+            <div style="font-size:0.85rem">
+              <div class="factor-item"><span>Temperature</span><div><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:70%;background:var(--amber-200)"></div></div></div><span style="font-size:0.78rem;color:var(--text-muted)">28°C</span></div>
+              <div class="factor-item"><span>Humidity</span><div><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:65%;background:var(--teal-200)"></div></div></div><span style="font-size:0.78rem;color:var(--text-muted)">65%</span></div>
+              <div class="factor-item"><span>Rainfall</span><div><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:40%;background:var(--green-200)"></div></div></div><span style="font-size:0.78rem;color:var(--text-muted)">18mm</span></div>
+              <div class="factor-item"><span>Wind</span><div><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:25%;background:var(--gray-200)"></div></div></div><span style="font-size:0.78rem;color:var(--text-muted)">12km/h</span></div>
+              <div class="factor-item"><span>UV Index</span><div><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:55%;background:#E24B4A"></div></div></div><span style="font-size:0.78rem;color:var(--text-muted)">High</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:0">
+          <div class="card">
+            <h3>🥧 Crop Health Distribution</h3>
+            <div style="display:flex;align-items:center;justify-content:center;flex-direction:column">
+              <canvas id="healthPieChart" height="180" style="max-width:200px"></canvas>
+              <div class="pie-legend">
+                <div class="pie-legend-item"><div class="pie-legend-dot" style="background:#3B6D11"></div>Healthy (60%)</div>
+                <div class="pie-legend-item"><div class="pie-legend-dot" style="background:#EF9F27"></div>Moderate (25%)</div>
+                <div class="pie-legend-item"><div class="pie-legend-dot" style="background:#E24B4A"></div>Disease (10%)</div>
+                <div class="pie-legend-item"><div class="pie-legend-dot" style="background:#5DCAA5"></div>Unknown (5%)</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>🧺 Fertilizer Usage</h3>
+            <canvas id="fertPieChart" height="180" style="max-width:200px;display:block;margin:0 auto"></canvas>
+            <div class="pie-legend">
+              <div class="pie-legend-item"><div class="pie-legend-dot" style="background:#1D9E75"></div>NPK (40%)</div>
+              <div class="pie-legend-item"><div class="pie-legend-dot" style="background:#BA7517"></div>Urea (30%)</div>
+              <div class="pie-legend-item"><div class="pie-legend-dot" style="background:#639922"></div>Organic (20%)</div>
+              <div class="pie-legend-item"><div class="pie-legend-dot" style="background:#888780"></div>Micro (10%)</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>⚡ Recent Activity</h3>
+          <div style="font-size:0.88rem">
+            <div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)"><span style="font-size:1.2rem">🔬</span><div><strong>Crop scan completed</strong> – Rice field (Block A) detected as healthy<span style="display:block;color:var(--text-muted);font-size:0.8rem">2 hours ago</span></div><span class="badge badge-green" style="margin-left:auto">Healthy</span></div>
+            <div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)"><span style="font-size:1.2rem">📦</span><div><strong>Order placed</strong> – NPK 20-20-20 (5kg × 3)<span style="display:block;color:var(--text-muted);font-size:0.8rem">Yesterday</span></div><span class="badge badge-amber">Processing</span></div>
+            <div style="display:flex;gap:12px;align-items:center;padding:10px 0"><span style="font-size:1.2rem">📈</span><div><strong>Yield prediction updated</strong> – 4.2 t/ha for wheat<span style="display:block;color:var(--text-muted);font-size:0.8rem">3 days ago</span></div><span class="badge badge-green">+12%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scan Panel -->
+      <div class="dash-panel" id="panel-scan">
+        <div class="dash-header"><h2>🔬 Scan Your Crop</h2><p>Upload a photo for AI-powered health analysis using CNN</p></div>
+        <div class="card">
+          <h3>Upload Crop Image</h3>
+          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+            <input type="file" id="fileInput" accept="image/*" onchange="handleUpload(event)">
+            <div class="uz-icon">📸</div>
+            <h3>Click to upload or drag & drop</h3>
+            <p>Supports JPG, PNG, WEBP — max 10MB</p>
+          </div>
+          <img class="preview-img" id="previewImg">
+          <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+          <div id="scanStatus" style="display:none;font-size:0.85rem;color:var(--text-muted);margin:0.5rem 0;font-family:'JetBrains Mono',monospace"></div>
+          <div class="result-card" id="scanResult">
+            <h4>🧠 CNN Analysis Results</h4>
+            <div class="result-row"><span>Crop Type Detected</span><span class="badge badge-green" id="res-crop">Rice (Oryza sativa)</span></div>
+            <div class="result-row"><span>Health Status</span><span id="res-health"><span class="badge badge-green">✓ Healthy</span></span></div>
+            <div class="result-row"><span>Confidence Score</span><span id="res-conf">91.4%</span></div>
+            <div class="result-row"><span>Growth Stage</span><span id="res-stage">Vegetative (V4)</span></div>
+            <div class="result-row"><span>Detected Issues</span><span id="res-issues">None</span></div>
+            <div class="result-row"><span>Solutions</span><span id="res-solutions" style="text-align:right;max-width:55%;font-size:0.82rem;color:var(--green-800)">—</span></div>
+            <div class="result-row" style="border:none"><span>Recommendations</span><span id="res-rec" style="text-align:right;max-width:55%;font-size:0.82rem">Continue current irrigation schedule. Monitor for pests weekly.</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🧬 How CNN Analysis Works</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;font-size:0.85rem">
+            <div style="text-align:center;padding:1rem;background:var(--green-50);border-radius:10px"><div style="font-size:2rem;margin-bottom:6px">📷</div><strong>Image Input</strong><p style="color:var(--text-muted);margin-top:4px">RGB image preprocessed to 224×224</p></div>
+            <div style="text-align:center;padding:1rem;background:var(--amber-50);border-radius:10px"><div style="font-size:2rem;margin-bottom:6px">🔍</div><strong>Feature Extraction</strong><p style="color:var(--text-muted);margin-top:4px">Conv layers detect edges, textures, patterns</p></div>
+            <div style="text-align:center;padding:1rem;background:var(--teal-50);border-radius:10px"><div style="font-size:2rem;margin-bottom:6px">🧩</div><strong>Classification</strong><p style="color:var(--text-muted);margin-top:4px">FC layers classify crop type & health</p></div>
+            <div style="text-align:center;padding:1rem;background:#E6F1FB;border-radius:10px"><div style="font-size:2rem;margin-bottom:6px">📋</div><strong>Report</strong><p style="color:var(--text-muted);margin-top:4px">Actionable insights & recommendations</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Yield Panel -->
+      <div class="dash-panel" id="panel-yield">
+        <div class="dash-header"><h2>📈 Yield Prediction Engine</h2><p>Random Forest Regression model — input parameters for prediction</p></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+          <div class="card">
+            <h3>🌡️ Climate & Soil Parameters</h3>
+            <div class="form-group"><label>Crop Type</label>
+              <select id="yp-crop"><option>Rice</option><option>Wheat</option><option>Maize</option><option>Sugarcane</option><option>Cotton</option><option>Soybean</option><option>Groundnut</option></select>
+            </div>
+            <div class="yield-grid" style="margin-bottom:1rem">
+              <div class="form-group"><label>Avg Temperature (°C)</label><input type="number" id="yp-temp" value="28" min="10" max="45"></div>
+              <div class="form-group"><label>Rainfall (mm/season)</label><input type="number" id="yp-rain" value="850" min="0" max="3000"></div>
+              <div class="form-group"><label>Humidity (%)</label><input type="number" id="yp-humidity" value="65" min="20" max="100"></div>
+              <div class="form-group"><label>Soil pH</label><input type="number" id="yp-ph" value="6.5" step="0.1" min="4" max="9"></div>
+              <div class="form-group"><label>Nitrogen (kg/ha)</label><input type="number" id="yp-nitrogen" value="120" min="0" max="300"></div>
+              <div class="form-group"><label>Phosphorus (kg/ha)</label><input type="number" id="yp-phosphorus" value="60" min="0" max="200"></div>
+            </div>
+            <div class="form-group"><label>Field Area (Hectares)</label><input type="number" id="yp-area" value="2.5" step="0.5" min="0.5"></div>
+            <button class="btn-full" onclick="predictYield()">🧠 Run Prediction</button>
+          </div>
+          <div>
+            <div class="yield-result" id="yieldResult">
+              <div style="font-size:0.88rem;opacity:0.8;margin-bottom:0.5rem">Predicted Yield</div>
+              <div class="big-num" id="yp-result">—</div>
+              <div class="unit">tonnes / hectare</div>
+              <div class="sub" id="yp-total">Enter parameters to predict</div>
+              <div class="confidence-bar">
+                <div class="conf-label"><span>Model Confidence</span><span id="yp-conf">—</span></div>
+                <div class="conf-track"><div class="conf-fill" id="yp-conf-fill" style="width:0%"></div></div>
+              </div>
+            </div>
+            <div class="card" style="margin-top:1rem">
+              <h3>🌲 Feature Importance</h3>
+              <div class="factor-list" id="featureList">
+                <div class="factor-item"><span style="font-size:0.82rem">Rainfall</span><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:85%"></div></div><span style="font-size:0.78rem;color:var(--text-muted)">85%</span></div>
+                <div class="factor-item"><span style="font-size:0.82rem">Temperature</span><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:72%"></div></div><span style="font-size:0.78rem;color:var(--text-muted)">72%</span></div>
+                <div class="factor-item"><span style="font-size:0.82rem">Soil pH</span><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:61%"></div></div><span style="font-size:0.78rem;color:var(--text-muted)">61%</span></div>
+                <div class="factor-item"><span style="font-size:0.82rem">Nitrogen</span><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:54%"></div></div><span style="font-size:0.78rem;color:var(--text-muted)">54%</span></div>
+                <div class="factor-item"><span style="font-size:0.82rem">Humidity</span><div class="factor-bar-wrap"><div class="factor-bar-fill" style="width:43%"></div></div><span style="font-size:0.78rem;color:var(--text-muted)">43%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>📐 Model Formula</h3>
+          <div style="background:var(--gray-900);color:var(--green-100);padding:1rem 1.25rem;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.8">
+            <div style="color:var(--amber-100)"># Random Forest Regression – KrishiNetra Model</div>
+            <div>Yield = f(Temp, Precipitation, SoilpH, Nitrogen, Humidity)</div>
+            <div style="color:var(--gray-200)">       = Σ(wᵢ × TreePredictionᵢ) / n_estimators</div>
+            <div style="margin-top:0.5rem;color:var(--teal-200)"># n_estimators=200, max_depth=15, min_samples_leaf=5</div>
+            <div style="color:var(--teal-200)"># RMSE: 0.34 t/ha | R²: 0.94 on test set</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crops Panel -->
+      <div class="dash-panel" id="panel-crops">
+        <div class="dash-header"><h2>🌾 Crop Suggestions</h2><p>AI-ranked recommendations based on your local conditions</p></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem">
+          <div class="card" style="background:var(--green-50);border-color:var(--green-100);padding:1rem">
+            <div class="filter-label" style="color:var(--green-800)">📍 Location</div>
+            <div class="filter-select-wrap">
+              <select id="filter-location" onchange="updateCropSuggestions()">
+                <option value="Yelahanka, Karnataka">Yelahanka, Karnataka</option>
+                <option value="Bengaluru Rural, Karnataka">Bengaluru Rural, Karnataka</option>
+                <option value="Mysuru, Karnataka">Mysuru, Karnataka</option>
+                <option value="Tumkur, Karnataka">Tumkur, Karnataka</option>
+                <option value="Davangere, Karnataka">Davangere, Karnataka</option>
+                <option value="Hubli, Karnataka">Hubli, Karnataka</option>
+                <option value="Pune, Maharashtra">Pune, Maharashtra</option>
+                <option value="Nagpur, Maharashtra">Nagpur, Maharashtra</option>
+                <option value="Ludhiana, Punjab">Ludhiana, Punjab</option>
+                <option value="Lucknow, Uttar Pradesh">Lucknow, Uttar Pradesh</option>
+              </select>
+            </div>
+          </div>
+          <div class="card" style="background:var(--amber-50);border-color:var(--amber-100);padding:1rem">
+            <div class="filter-label" style="color:var(--amber-600)">🌤️ Season</div>
+            <div class="filter-select-wrap">
+              <select id="filter-season" onchange="updateCropSuggestions()">
+                <option value="Kharif 2025">Kharif 2025 (Jun–Oct)</option>
+                <option value="Rabi 2025-26">Rabi 2025–26 (Oct–Mar)</option>
+                <option value="Zaid 2026">Zaid 2026 (Mar–Jun)</option>
+              </select>
+            </div>
+          </div>
+          <div class="card" style="background:var(--teal-50);border-color:var(--teal-100);padding:1rem">
+            <div class="filter-label" style="color:var(--teal-600)">🪨 Soil Type</div>
+            <div class="filter-select-wrap">
+              <select id="filter-soil" onchange="updateCropSuggestions()">
+                <option value="Red Laterite Loam">Red Laterite Loam</option>
+                <option value="Black Cotton Soil">Black Cotton Soil</option>
+                <option value="Sandy Loam">Sandy Loam</option>
+                <option value="Clay Loam">Clay Loam</option>
+                <option value="Alluvial Soil">Alluvial Soil</option>
+                <option value="Silty Loam">Silty Loam</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Top Recommended Crops</h3>
+          <div class="crop-table-wrap">
+            <table>
+              <thead><tr><th>Rank</th><th>Crop</th><th>Suitability</th><th>Yield Potential</th><th>Water Need</th><th>Market Price</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td><strong style="color:var(--green-600)">🥇 1</strong></td><td><strong>Ragi (Finger Millet)</strong><br><span style="font-size:0.78rem;color:var(--text-muted)">Eleusine coracana</span></td><td><div class="suitability"><div class="suit-bar"><div class="suit-fill" style="width:94%;background:var(--green-400)"></div></div><strong>94%</strong></div></td><td>2.5–3.2 t/ha</td><td><span class="badge badge-green">Low</span></td><td>₹1,800/qt</td><td><button class="btn-sm btn-green" onclick="openCropPlan('Ragi (Finger Millet)', 'Eleusine coracana', 94, '2.5–3.2 t/ha', 'Low', '₹1,800/qt', 'Jun–Aug', 'Red Laterite, Sandy Loam', 'DAP 80kg/ha basal + Urea 50kg top dress', 'Blast disease, Aphids', 'Spray Carbendazim 1g/L for blast')">📋 Plan</button></td></tr>
+                <tr><td><strong style="color:var(--amber-400)">🥈 2</strong></td><td><strong>Groundnut</strong><br><span style="font-size:0.78rem;color:var(--text-muted)">Arachis hypogaea</span></td><td><div class="suitability"><div class="suit-bar"><div class="suit-fill" style="width:88%;background:var(--amber-200)"></div></div><strong>88%</strong></div></td><td>1.8–2.4 t/ha</td><td><span class="badge badge-amber">Medium</span></td><td>₹4,200/qt</td><td><button class="btn-sm btn-green" onclick="openCropPlan('Groundnut', 'Arachis hypogaea', 88, '1.8–2.4 t/ha', 'Medium', '₹4,200/qt', 'Jun–Sep', 'Red Loam, Sandy Loam', 'SSP 20kg/ha + Gypsum 250kg/ha at pod initiation', 'Tikka disease, Collar rot', 'Carbendazim + Mancozeb spray at 30 DAS')">📋 Plan</button></td></tr>
+                <tr><td><strong>🥉 3</strong></td><td><strong>Maize</strong><br><span style="font-size:0.78rem;color:var(--text-muted)">Zea mays</span></td><td><div class="suitability"><div class="suit-bar"><div class="suit-fill" style="width:82%;background:var(--teal-200)"></div></div><strong>82%</strong></div></td><td>5–7 t/ha</td><td><span class="badge badge-amber">Medium</span></td><td>₹1,550/qt</td><td><button class="btn-sm btn-green" onclick="openCropPlan('Maize', 'Zea mays', 82, '5–7 t/ha', 'Medium', '₹1,550/qt', 'Jun–Oct', 'All soil types', 'NPK 120:60:40 kg/ha, Zinc 25kg/ha', 'Stem borer, Fall armyworm', 'Chlorpyrifos 2.5ml/L at whorl stage')">📋 Plan</button></td></tr>
+                <tr><td><strong>4</strong></td><td><strong>Sunflower</strong><br><span style="font-size:0.78rem;color:var(--text-muted)">Helianthus annuus</span></td><td><div class="suitability"><div class="suit-bar"><div class="suit-fill" style="width:76%;background:var(--amber-100)"></div></div><strong>76%</strong></div></td><td>1.2–1.8 t/ha</td><td><span class="badge badge-green">Low</span></td><td>₹3,900/qt</td><td><button class="btn-sm btn-green" onclick="openCropPlan('Sunflower', 'Helianthus annuus', 76, '1.2–1.8 t/ha', 'Low', '₹3,900/qt', 'Jul–Nov', 'Loam, Red Soil', 'NPK 90:60:60 kg/ha + Boron 1kg/ha', 'Alternaria blight, Head rot', 'Mancozeb 2.5g/L at bud stage')">📋 Plan</button></td></tr>
+                <tr><td><strong>5</strong></td><td><strong>Red Gram (Tur)</strong><br><span style="font-size:0.78rem;color:var(--text-muted)">Cajanus cajan</span></td><td><div class="suitability"><div class="suit-bar"><div class="suit-fill" style="width:71%;background:var(--gray-200)"></div></div><strong>71%</strong></div></td><td>0.8–1.3 t/ha</td><td><span class="badge badge-green">Low</span></td><td>₹6,200/qt</td><td><button class="btn-sm btn-green" onclick="openCropPlan('Red Gram (Tur)', 'Cajanus cajan', 71, '0.8–1.3 t/ha', 'Low', '₹6,200/qt', 'Jun–Jan', 'All dryland soils', 'DAP 50kg/ha basal + Rhizobium seed treatment', 'Fusarium wilt, Pod borer', 'Spray Imidacloprid 0.3ml/L at pod formation')">📋 Plan</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crop Plan Modal -->
+      <div class="plan-modal-backdrop" id="planModal">
+        <div class="plan-modal">
+          <h3 id="planCropName">Crop Plan</h3>
+          <div style="background:var(--green-50);border-radius:10px;padding:10px 14px;margin-bottom:1.25rem;font-size:0.85rem;color:var(--green-800)">
+            📍 <span id="planLocation">—</span> &nbsp;|&nbsp; 🌤️ <span id="planSeason">—</span> &nbsp;|&nbsp; 🪨 <span id="planSoil">—</span>
+          </div>
+          <div class="plan-section">
+            <h4>🌱 Basic Info</h4>
+            <div class="plan-row"><span>Scientific Name</span><span id="planScientific" style="font-style:italic;color:var(--text-muted)">—</span></div>
+            <div class="plan-row"><span>Suitability Score</span><span id="planSuit" style="color:var(--green-600);font-weight:700">—</span></div>
+            <div class="plan-row"><span>Yield Potential</span><span id="planYield">—</span></div>
+            <div class="plan-row"><span>Water Requirement</span><span id="planWater">—</span></div>
+            <div class="plan-row"><span>Market Price</span><span id="planPrice" style="color:var(--green-600);font-weight:600">—</span></div>
+            <div class="plan-row"><span>Planting Window</span><span id="planWindow">—</span></div>
+            <div class="plan-row"><span>Best Soil Types</span><span id="planSoilType" style="text-align:right;max-width:55%">—</span></div>
+          </div>
+          <div class="plan-section">
+            <h4>🧪 Fertilizer Schedule</h4>
+            <div style="background:var(--amber-50);border-radius:8px;padding:10px 14px;font-size:0.85rem" id="planFertilizer">—</div>
+          </div>
+          <div class="plan-section">
+            <h4>🐛 Common Issues</h4>
+            <div style="background:#FCEBEB;border-radius:8px;padding:10px 14px;font-size:0.85rem" id="planIssues">—</div>
+          </div>
+          <div class="plan-section">
+            <h4>💊 Solutions & Recommendations</h4>
+            <div style="background:var(--teal-50);border-radius:8px;padding:10px 14px;font-size:0.85rem" id="planSolutions">—</div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:1rem">
+            <button class="btn-cancel" onclick="closePlanModal()" style="flex:1">Close</button>
+            <button class="btn-full" style="flex:2" onclick="closePlanModal();showToast('✅ Crop plan saved to your dashboard!')">💾 Save Plan</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shop Panel -->
+      <div class="dash-panel" id="panel-shop">
+        <div class="dash-header"><h2>🛒 Fertilizer Marketplace</h2><p>AI-recommended fertilizers with instant payment</p></div>
+        <div style="display:flex;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap">
+          <button class="btn-sm btn-green">All Products</button>
+          <button class="btn-sm" style="background:var(--bg);border:1px solid var(--border)">NPK</button>
+          <button class="btn-sm" style="background:var(--bg);border:1px solid var(--border)">Organic</button>
+          <button class="btn-sm" style="background:var(--bg);border:1px solid var(--border)">Micronutrients</button>
+          <button class="btn-sm" style="background:var(--bg);border:1px solid var(--border)">Urea</button>
+        </div>
+        <div class="product-grid">
+          <div class="product-card">
+            <div class="product-img" style="background:var(--green-50)">🧪</div>
+            <div class="product-info">
+              <h4>NPK 20-20-20 Complete</h4>
+              <p>Balanced macro-nutrient formula for all growth stages</p>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <span class="product-price">₹ 850<span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">/5kg</span></span>
+                <button class="btn-sm btn-green" onclick="addToCart(this,'NPK 20-20-20',850)">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-img" style="background:var(--amber-50)">🌿</div>
+            <div class="product-info">
+              <h4>Organic Vermicompost</h4>
+              <p>Rich in humus, enhances soil microbial activity naturally</p>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <span class="product-price">₹ 320<span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">/10kg</span></span>
+                <button class="btn-sm btn-green" onclick="addToCart(this,'Vermicompost',320)">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-img" style="background:#E6F1FB">💧</div>
+            <div class="product-info">
+              <h4>Urea 46% N</h4>
+              <p>High-nitrogen prilled urea for vegetative growth boost</p>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <span class="product-price">₹ 275<span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">/45kg</span></span>
+                <button class="btn-sm btn-green" onclick="addToCart(this,'Urea 46%',275)">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-img" style="background:var(--teal-50)">🔬</div>
+            <div class="product-info">
+              <h4>Zinc Sulphate 21%</h4>
+              <p>Corrects zinc deficiency, improves grain filling</p>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <span class="product-price">₹ 480<span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">/5kg</span></span>
+                <button class="btn-sm btn-green" onclick="addToCart(this,'Zinc Sulphate',480)">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-img" style="background:#FBEAF0">🌱</div>
+            <div class="product-info">
+              <h4>Bio-Stimulant Seaweed</h4>
+              <p>Natural growth promoter — improves stress tolerance</p>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <span class="product-price">₹ 1,100<span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">/1L</span></span>
+                <button class="btn-sm btn-green" onclick="addToCart(this,'Seaweed Extract',1100)">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+          <div class="product-card">
+            <div class="product-img" style="background:var(--gray-50)">⚗️</div>
+            <div class="product-info">
+              <h4>DAP 18-46-0</h4>
+              <p>Di-ammonium phosphate for root development & flowering</p>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <span class="product-price">₹ 1,350<span style="font-size:0.75rem;font-weight:400;color:var(--text-muted)">/50kg</span></span>
+                <button class="btn-sm btn-green" onclick="addToCart(this,'DAP 18-46-0',1350)">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:1.5rem" id="cartBox" style="display:none">
+          <h3>🛒 Cart (<span id="cartItemCount">0</span> items)</h3>
+          <div id="cartItems" style="font-size:0.88rem;margin-bottom:1rem"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><strong>Total: ₹ <span id="cartTotal">0</span></strong></div>
+            <button class="btn-sm btn-green" onclick="openPayment()">Proceed to Payment →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Panel -->
+      <div class="dash-panel" id="panel-faq">
+        <div class="dash-header"><h2>❓ Help Center</h2><p>Search common questions or browse categories</p></div>
+        <input class="faq-search" type="text" placeholder="🔍  Search questions... e.g. 'how to scan crop'" oninput="filterFAQ(this.value)">
+        <div id="faqList"></div>
+        <div class="no-results" id="noResults">No results found for your search. Try different keywords.</div>
+      </div>
+
+      <!-- Chat Panel -->
+      <div class="dash-panel" id="panel-chat">
+        <div class="dash-header"><h2>💬 AI Crop Assistant</h2><p>Ask anything about farming, crops, or platform features</p></div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg bot">🌿 Namaste! I'm KrishiBot, your AI farming assistant. Ask me about crop diseases, fertilizers, weather patterns, or yield optimization!</div>
+            <div class="chat-msg bot">You can ask things like:<br>• "Best crops for Karnataka Kharif season"<br>• "Why are my rice leaves turning yellow?"<br>• "How much NPK for wheat per hectare?"</div>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-input" type="text" id="chatInput" placeholder="Ask about crops, soil, weather..." onkeypress="if(event.key==='Enter')sendChat()">
+            <button class="chat-send" onclick="sendChat()">Send ↗</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="modal-backdrop" id="paymentModal">
+  <div class="modal" style="max-width:520px;max-height:92vh;overflow-y:auto">
+
+    <!-- Step 1: Cart Review -->
+    <div class="checkout-step active" id="checkout-step-cart">
+      <h3>🛒 Review Your Cart</h3>
+      <div style="background:var(--green-50);border-radius:10px;padding:12px;margin-bottom:1.25rem;font-size:0.88rem">
+        <div id="modalCartItems" style="margin-bottom:8px"></div>
+        <div style="border-top:1px solid var(--green-100);padding-top:8px;display:flex;justify-content:space-between"><strong>Total</strong><strong style="color:var(--green-600)">₹ <span id="payTotal">0</span></strong></div>
+        <span style="display:block;color:var(--text-muted);font-size:0.8rem;margin-top:4px">🚚 Free delivery for orders above ₹500</span>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closePayment()">Cancel</button>
+        <button class="btn-full" style="flex:1" onclick="goCheckoutStep('address')">Proceed to Checkout →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Address -->
+    <div class="checkout-step" id="checkout-step-address">
+      <h3>📦 Delivery Address</h3>
+      <div class="address-form">
+        <div class="form-group"><label>Full Name</label><input type="text" id="addr-name" placeholder="Rajan Kumar" value="Rajan Kumar"></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" id="addr-phone" placeholder="+91 9876543210" value="+91 9876543210"></div>
+        <div class="form-group"><label>Address Line 1</label><input type="text" id="addr-line1" placeholder="House No, Street Name" value="12, MES Colony"></div>
+        <div class="form-group"><label>Address Line 2</label><input type="text" id="addr-line2" placeholder="Area, Landmark" value="Near Yelahanka New Town"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-group"><label>City</label><input type="text" id="addr-city" placeholder="City" value="Bengaluru"></div>
+          <div class="form-group"><label>PIN Code</label><input type="text" id="addr-pin" placeholder="560064" value="560064"></div>
+        </div>
+        <div class="form-group"><label>State</label>
+          <select id="addr-state">
+            <option selected>Karnataka</option><option>Maharashtra</option><option>Punjab</option><option>Uttar Pradesh</option><option>Gujarat</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="goCheckoutStep('cart')">← Back</button>
+        <button class="btn-full" style="flex:1" onclick="confirmAddress()">Confirm Address →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Payment Method -->
+    <div class="checkout-step" id="checkout-step-payment">
+      <h3>💳 Payment Options</h3>
+      <div style="background:var(--green-50);border-radius:10px;padding:10px 14px;margin-bottom:1rem;font-size:0.85rem">
+        <strong>📦 Delivering to:</strong> <span id="deliveryAddrSummary" style="color:var(--text-muted)"></span>
+      </div>
+      <div style="font-size:0.82rem;font-weight:500;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">Select Payment Method</div>
+      <div class="payment-icons" id="payMethodIcons">
+        <div class="pay-icon selected" onclick="selectPayMethod(this,'upi')">📱 UPI</div>
+        <div class="pay-icon" onclick="selectPayMethod(this,'cod')">💵 Cash on Delivery</div>
+      </div>
+      <div id="payMethodDetail" style="margin:1rem 0"></div>
+      <div style="background:var(--bg);border-radius:10px;padding:10px 14px;font-size:0.88rem;margin-bottom:1rem">
+        <strong>Order Total: ₹ <span id="payTotalStep3">0</span></strong>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="goCheckoutStep('address')">← Back</button>
+        <button class="btn-full" style="flex:1" id="payActionBtn" onclick="processPayment()">Place Order →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: UPI QR -->
+    <div class="checkout-step" id="checkout-step-qr">
+      <h3>📱 Scan to Pay via UPI</h3>
+      <div class="qr-wrap">
+        <div class="qr-code" id="qrCodeSvg"></div>
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px">UPI ID:</div>
+        <div class="upi-id-box">krishinetra@upi</div>
+        <div style="font-size:0.88rem;color:var(--text-muted);margin-top:10px">Amount: <strong style="color:var(--green-600)">₹ <span id="qrAmount">0</span></strong></div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:6px">Open GPay / PhonePe / Paytm and scan this QR code</div>
+      </div>
+      <div class="modal-btns" style="flex-direction:column;gap:8px">
+        <button class="btn-full" onclick="completeUpiPayment()">✅ I've Completed the Payment</button>
+        <button class="btn-cancel" style="width:100%;text-align:center" onclick="goCheckoutStep('payment')">← Change Payment Method</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Success -->
+    <div class="checkout-step" id="checkout-step-success">
+      <div class="success-msg" style="display:block">
+        <div class="checkmark">✅</div>
+        <h4>Order Placed Successfully!</h4>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-top:8px">Your order has been confirmed. Expected delivery: 2–3 business days.</p>
+        <div style="margin-top:1rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;background:var(--bg);padding:10px;border-radius:8px">Order ID: KN-<span id="orderId"></span></div>
+        <div id="successPayMethod" style="font-size:0.82rem;color:var(--teal-600);margin-top:8px"></div>
+        <button class="btn-full" style="margin-top:1.25rem" onclick="closePayment()">Continue Shopping</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ── STATE ──
+let currentPage = 'home';
+let currentPanel = 'overview';
+let cartItems = [];
+let cartTotal = 0;
+let isLogin = true;
+
+// ── NAVIGATION ──
+function goPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
+  const el = document.getElementById('nav-' + page);
+  if (el) el.classList.add('active');
+  currentPage = page;
+  if (page === 'dashboard') { showPanel(currentPanel === 'overview' ? 'overview' : currentPanel); initChart(); }
+  window.scrollTo(0,0);
+}
+
+function showPanel(panel) {
+  if (currentPage !== 'dashboard') { goPage('dashboard'); }
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav li a').forEach(a => a.classList.remove('active'));
+  const panelEl = document.getElementById('panel-' + panel);
+  const navEl = document.getElementById('sn-' + panel);
+  if (panelEl) panelEl.classList.add('active');
+  if (navEl) navEl.classList.add('active');
+  currentPanel = panel;
+  if (panel === 'faq') initFAQ();
+  if (panel === 'overview') initChart();
+}
+
+function toggleMenu() {
+  const ul = document.getElementById('nav-links');
+  ul.style.display = ul.style.display === 'flex' ? 'none' : 'flex';
+  ul.style.flexDirection = 'column';
+  ul.style.position = 'absolute';
+  ul.style.top = '64px';
+  ul.style.left = '0';
+  ul.style.right = '0';
+  ul.style.background = '#fff';
+  ul.style.padding = '1rem';
+  ul.style.borderBottom = '1px solid var(--border)';
+}
+
+// ── AUTH STATE ──
+let isLoggedIn = false;
+let currentUser = { name: 'Rajan Kumar', role: 'Pro Farmer', avatar: null };
+
+function updateAuthUI() {
+  const navBtn = document.getElementById('nav-auth-btn');
+  const logoutBtn = document.getElementById('sidebarLogoutBtn');
+  const loginBtn = document.getElementById('sidebarLoginBtn');
+  const sidebarName = document.getElementById('sidebarName');
+  const sidebarRole = document.getElementById('sidebarRole');
+  if (isLoggedIn) {
+    navBtn.textContent = '👤 ' + currentUser.name.split(' ')[0];
+    navBtn.onclick = () => showPanel('overview');
+    logoutBtn.style.display = 'flex';
+    loginBtn.style.display = 'none';
+    sidebarName.textContent = currentUser.name;
+    sidebarRole.textContent = currentUser.role;
+  } else {
+    navBtn.textContent = 'Login';
+    navBtn.onclick = () => goPage('auth');
+    logoutBtn.style.display = 'none';
+    loginBtn.style.display = 'flex';
+    sidebarName.textContent = 'Guest User';
+    sidebarRole.textContent = 'Not logged in';
+  }
+  // update avatar
+  const initials = document.getElementById('sidebarAvatarInitials');
+  const img = document.getElementById('sidebarAvatarImg');
+  if (currentUser.avatar) {
+    img.src = currentUser.avatar; img.style.display = 'block'; initials.style.display = 'none';
+  } else {
+    img.style.display = 'none'; initials.style.display = 'block';
+    initials.textContent = currentUser.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  }
+}
+
+function updateProfilePicture(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    currentUser.avatar = ev.target.result;
+    updateAuthUI();
+    showToast('✅ Profile picture updated!');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── AUTH ──
+function toggleAuth() {
+  isLogin = !isLogin;
+  document.getElementById('auth-form-login').style.display = isLogin ? 'block' : 'none';
+  document.getElementById('auth-form-register').style.display = isLogin ? 'none' : 'block';
+  document.getElementById('auth-title').textContent = isLogin ? 'Welcome back' : 'Create account';
+  document.getElementById('auth-sub').textContent = isLogin ? 'Sign in to your KrishiNetra account' : 'Join 12,000+ farmers using AI';
+}
+
+function doLogin() {
+  isLoggedIn = true;
+  showToast('✅ Login successful! Welcome back, Rajan.');
+  updateAuthUI();
+  setTimeout(() => { goPage('dashboard'); showPanel('overview'); }, 800);
+}
+
+function doLogout() {
+  isLoggedIn = false;
+  currentUser.avatar = null;
+  updateAuthUI();
+  showToast('👋 Logged out successfully.');
+  setTimeout(() => goPage('home'), 600);
+}
+
+// ── CHART ──
+let chartInited = false;
+function initChart() {
+  if (chartInited) return;
+  const ctx = document.getElementById('yieldChart');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      datasets: [{
+        label: 'Predicted Yield (t/ha)',
+        data: [0,0,0,1.2,2.1,3.0,3.8,4.2,3.9,2.8,1.0,0],
+        borderColor: '#3B6D11', backgroundColor: 'rgba(59,109,17,0.08)',
+        tension: 0.4, fill: true, pointRadius: 4, pointBackgroundColor: '#3B6D11'
+      },{
+        label: 'Last Season',
+        data: [0,0,0,0.9,1.8,2.7,3.4,3.7,3.3,2.4,0.8,0],
+        borderColor: '#9FE1CB', backgroundColor: 'transparent',
+        tension: 0.4, borderDash: [5,5], pointRadius: 3, pointBackgroundColor: '#1D9E75'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { position: 'top', labels: { font: { size: 11, family: 'DM Sans' } } } },
+      scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } }, x: { grid: { display: false } } }
+    }
+  });
+
+  // Health Pie Chart
+  const pieCtx = document.getElementById('healthPieChart');
+  if (pieCtx) {
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Healthy', 'Moderate', 'Disease', 'Unknown'],
+        datasets: [{ data: [60, 25, 10, 5], backgroundColor: ['#3B6D11','#EF9F27','#E24B4A','#5DCAA5'], borderWidth: 2, borderColor: '#fff' }]
+      },
+      options: { responsive:true, plugins: { legend: { display:false } } }
+    });
+  }
+
+  // Fertilizer Pie Chart
+  const fertCtx = document.getElementById('fertPieChart');
+  if (fertCtx) {
+    new Chart(fertCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['NPK', 'Urea', 'Organic', 'Micro-nutrients'],
+        datasets: [{ data: [40, 30, 20, 10], backgroundColor: ['#1D9E75','#BA7517','#639922','#888780'], borderWidth: 2, borderColor: '#fff' }]
+      },
+      options: { responsive:true, plugins: { legend: { display:false } }, cutout: '55%' }
+    });
+  }
+
+  chartInited = true;
+}
+
+// ── SCAN ──
+const diseases = [
+  { crop:'Rice (Oryza sativa)', health:'<span class="badge badge-green">✓ Healthy</span>', conf:'91.4%', stage:'Vegetative (V4)', issues:'None detected', solutions:'No treatment required', rec:'Continue current irrigation schedule. Monitor for BLB and stem borer weekly. Apply top-dress nitrogen at tillering stage.' },
+  { crop:'Wheat (Triticum aestivum)', health:'<span class="badge badge-amber">⚠ Leaf Rust</span>', conf:'87.2%', stage:'Tillering (Z23)', issues:'Puccinia triticina (Leaf Rust) — orange pustules on leaves', solutions:'Apply Propiconazole 25% EC @ 0.1% or Tebuconazole 250 EW @ 1ml/L. Remove severely infected leaves.', rec:'Reduce canopy humidity by improving plant spacing. Rescan after 7 days. Avoid excess nitrogen application.' },
+  { crop:'Maize (Zea mays)', health:'<span class="badge badge-red">✗ Blight</span>', conf:'82.9%', stage:'V6 Growth Stage', issues:'Northern Corn Leaf Blight (Exserohilum turcicum) — long grey-green lesions', solutions:'Apply Mancozeb 75% WP @ 2.5g/L or Azoxystrobin 23% SC. Remove and destroy infected leaves immediately.', rec:'Ensure field drainage. Avoid overhead irrigation. Plant resistant varieties in next season. Rescan in 5–7 days.' },
+  { crop:'Ragi (Eleusine coracana)', health:'<span class="badge badge-green">✓ Healthy</span>', conf:'94.1%', stage:'Booting Stage', issues:'None detected', solutions:'No treatment required at this time', rec:'Apply top-dressing nitrogen (20 kg urea/ha). Ensure proper drainage. Watch for head blast during flowering stage.' },
+  { crop:'Groundnut (Arachis hypogaea)', health:'<span class="badge badge-amber">⚠ Tikka Disease</span>', conf:'85.6%', stage:'Pegging Stage', issues:'Early leaf spot (Cercospora arachidicola) — brown circular spots with yellow halo', solutions:'Spray Carbendazim 50% WP @ 1g/L or Chlorothalonil 75% WP @ 2g/L. Repeat after 15 days.', rec:'Improve air circulation by proper spacing. Avoid wetting foliage during irrigation. Apply gypsum 250 kg/ha at peg initiation.' },
+  { crop:'Tomato (Solanum lycopersicum)', health:'<span class="badge badge-red">✗ Late Blight</span>', conf:'89.3%', stage:'Fruiting Stage', issues:'Phytophthora infestans — dark water-soaked lesions on leaves and stems', solutions:'Apply Metalaxyl + Mancozeb (Ridomil Gold) @ 2.5g/L immediately. Remove infected plant parts. Avoid waterlogging.', rec:'Apply copper-based fungicide as preventive spray. Use drip irrigation instead of overhead. Improve field drainage urgently.' }
+];
+
+function handleUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = document.getElementById('previewImg');
+    img.src = ev.target.result; img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  simulateScan();
+}
+
+function simulateScan() {
+  const bar = document.getElementById('progressBar');
+  const fill = document.getElementById('progressFill');
+  const status = document.getElementById('scanStatus');
+  const result = document.getElementById('scanResult');
+  bar.style.display = 'block'; result.style.display = 'none';
+  status.style.display = 'block';
+  const steps = ['Loading CNN model weights...', 'Preprocessing image (224×224)...', 'Running Conv2D feature extraction...', 'Analyzing texture & color patterns...', 'Classifying crop type...', 'Analyzing health indicators...', 'Detecting disease markers...', 'Generating diagnostic report...'];
+  let i = 0, pct = 0;
+  const interval = setInterval(() => {
+    pct = Math.min(pct + 13, 100);
+    fill.style.width = pct + '%';
+    status.textContent = steps[Math.min(i, steps.length-1)];
+    i++;
+    if (pct >= 100) {
+      clearInterval(interval);
+      const d = diseases[Math.floor(Math.random() * diseases.length)];
+      document.getElementById('res-crop').textContent = d.crop;
+      document.getElementById('res-health').innerHTML = d.health;
+      document.getElementById('res-conf').textContent = d.conf;
+      document.getElementById('res-stage').textContent = d.stage;
+      document.getElementById('res-issues').textContent = d.issues;
+      document.getElementById('res-solutions').textContent = d.solutions;
+      document.getElementById('res-rec').textContent = d.rec;
+      result.style.display = 'block';
+      status.style.display = 'none';
+      showToast('✅ CNN crop analysis complete!');
+    }
+  }, 350);
+}
+
+// ── YIELD PREDICTION ──
+const cropYields = { Rice:4.2, Wheat:3.8, Maize:6.1, Sugarcane:65, Cotton:0.52, Soybean:2.1, Groundnut:1.9 };
+function predictYield() {
+  const crop = document.getElementById('yp-crop').value;
+  const temp = parseFloat(document.getElementById('yp-temp').value);
+  const rain = parseFloat(document.getElementById('yp-rain').value);
+  const humidity = parseFloat(document.getElementById('yp-humidity').value);
+  const ph = parseFloat(document.getElementById('yp-ph').value);
+  const nitrogen = parseFloat(document.getElementById('yp-nitrogen').value);
+  const area = parseFloat(document.getElementById('yp-area').value);
+  
+  const base = cropYields[crop] || 3.5;
+  let modifier = 1;
+  if (temp >= 22 && temp <= 32) modifier *= 1.05;
+  if (temp < 15 || temp > 40) modifier *= 0.85;
+  if (rain >= 600 && rain <= 1200) modifier *= 1.08;
+  if (rain < 300) modifier *= 0.75;
+  if (ph >= 6.0 && ph <= 7.0) modifier *= 1.04;
+  if (nitrogen >= 100) modifier *= 1.06;
+  if (humidity >= 50 && humidity <= 80) modifier *= 1.02;
+  
+  const predicted = (base * modifier).toFixed(2);
+  const totalTonnes = (predicted * area).toFixed(1);
+  const confidence = Math.min(85 + Math.random() * 12, 97).toFixed(1);
+  
+  document.getElementById('yp-result').textContent = predicted;
+  document.getElementById('yp-total').textContent = `${totalTonnes} tonnes total for ${area} ha`;
+  document.getElementById('yp-conf').textContent = confidence + '%';
+  document.getElementById('yp-conf-fill').style.width = confidence + '%';
+  showToast('🧠 Yield prediction complete!');
+}
+
+// ── SHOP ──
+function addToCart(btn, name, price) {
+  cartItems.push({ name, price });
+  cartTotal += price;
+  document.getElementById('cart-count').textContent = cartItems.length;
+  const cartBox = document.getElementById('cartBox');
+  cartBox.style.display = 'block';
+  document.getElementById('cartItemCount').textContent = cartItems.length;
+  document.getElementById('cartTotal').textContent = cartTotal.toLocaleString('en-IN');
+  const cartItemsEl = document.getElementById('cartItems');
+  cartItemsEl.innerHTML = cartItems.map(i => `<div class="factor-item"><span>${i.name}</span><span>₹ ${i.price.toLocaleString('en-IN')}</span></div>`).join('');
+  btn.textContent = '✓ Added';
+  btn.style.background = 'var(--teal-400)';
+  showToast(`🛒 ${name} added to cart!`);
+}
+
+// ── CHECKOUT FLOW ──
+let selectedPayMethod = 'upi';
+
+function openPayment() {
+  document.getElementById('payTotal').textContent = cartTotal.toLocaleString('en-IN');
+  const modalCart = document.getElementById('modalCartItems');
+  modalCart.innerHTML = cartItems.map(i => `<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.85rem"><span>${i.name}</span><span>₹ ${i.price.toLocaleString('en-IN')}</span></div>`).join('');
+  goCheckoutStep('cart');
+  document.getElementById('paymentModal').classList.add('open');
+}
+
+function closePayment() {
+  document.getElementById('paymentModal').classList.remove('open');
+}
+
+function goCheckoutStep(step) {
+  document.querySelectorAll('.checkout-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('checkout-step-' + step).classList.add('active');
+}
+
+function confirmAddress() {
+  const name = document.getElementById('addr-name').value;
+  const line1 = document.getElementById('addr-line1').value;
+  const city = document.getElementById('addr-city').value;
+  const pin = document.getElementById('addr-pin').value;
+  const state = document.getElementById('addr-state').value;
+  document.getElementById('deliveryAddrSummary').textContent = `${name}, ${line1}, ${city} - ${pin}, ${state}`;
+  document.getElementById('payTotalStep3').textContent = cartTotal.toLocaleString('en-IN');
+  selectedPayMethod = 'upi';
+  updatePayMethodDetail();
+  goCheckoutStep('payment');
+}
+
+function selectPayMethod(el, method) {
+  document.querySelectorAll('.pay-icon').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPayMethod = method;
+  updatePayMethodDetail();
+}
+
+function updatePayMethodDetail() {
+  const detail = document.getElementById('payMethodDetail');
+  const actionBtn = document.getElementById('payActionBtn');
+  if (selectedPayMethod === 'upi') {
+    detail.innerHTML = `<div style="background:var(--teal-50);border-radius:10px;padding:12px;font-size:0.85rem;color:var(--teal-800)">
+      <strong>📱 Pay via UPI</strong><br>
+      <span style="color:var(--text-muted)">You'll scan a QR code in the next step using GPay, PhonePe, or Paytm</span></div>`;
+    actionBtn.textContent = 'Proceed to Pay →';
+    actionBtn.onclick = () => showUpiQR();
+  } else {
+    detail.innerHTML = `<div style="background:var(--amber-50);border-radius:10px;padding:12px;font-size:0.85rem;color:var(--amber-800)">
+      <strong>💵 Cash on Delivery</strong><br>
+      <span style="color:var(--text-muted)">Pay ₹${cartTotal.toLocaleString('en-IN')} when your order arrives. Delivery in 2–3 business days.</span></div>`;
+    actionBtn.textContent = '✅ Place COD Order';
+    actionBtn.onclick = () => processCOD();
+  }
+}
+
+function showUpiQR() {
+  document.getElementById('qrAmount').textContent = cartTotal.toLocaleString('en-IN');
+  // Generate simple QR pattern as SVG
+  const qrEl = document.getElementById('qrCodeSvg');
+  qrEl.innerHTML = generateQRSvg();
+  goCheckoutStep('qr');
+}
+
+function generateQRSvg() {
+  const size = 144; const cells = 21; const cell = size / cells;
+  let svg = `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<rect width="${size}" height="${size}" fill="white"/>`;
+  // Seed pattern based on UPI ID
+  const pattern = [
+    [1,1,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,1,1,0,0],
+    [1,0,0,0,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,1,0],
+    [1,0,1,1,1,0,1,0,1,0,1,0,1,1,0,1,1,1,0,1,0],
+    [1,0,1,1,1,0,1,0,0,1,1,1,0,1,0,1,1,1,0,1,0],
+    [1,0,1,1,1,0,1,0,1,1,0,0,1,1,0,1,1,1,0,1,0],
+    [1,0,0,0,0,0,1,0,1,0,1,0,0,1,0,0,0,0,0,1,0],
+    [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
+    [0,0,0,0,0,0,0,0,1,1,0,1,0,1,0,0,0,0,0,0,0],
+    [1,0,1,1,0,1,1,1,0,1,1,0,1,0,1,1,0,1,0,1,1],
+    [0,1,0,0,1,0,0,0,1,0,1,1,0,1,0,0,1,1,1,0,0],
+    [1,0,1,0,1,1,1,1,0,1,0,1,1,0,1,0,1,0,0,1,0],
+    [0,1,0,1,0,1,0,0,1,0,1,0,0,1,0,1,0,1,1,0,1],
+    [1,1,0,0,1,0,1,0,1,1,0,0,1,0,1,0,1,1,0,1,1],
+    [0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,0,1,0,1,0,0],
+    [1,1,1,1,1,1,1,0,1,0,0,1,1,0,1,0,1,1,0,1,1],
+    [1,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0],
+    [1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,1,0,1,0],
+    [1,0,1,1,1,0,1,1,0,1,0,1,0,1,0,1,0,0,1,0,1],
+    [1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,1,0,1,0,1,0],
+    [1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,1,0,1],
+    [1,1,1,1,1,1,1,0,1,0,1,1,0,1,0,0,1,1,0,1,0]
+  ];
+  for(let r=0;r<cells;r++) for(let c=0;c<cells;c++) {
+    if(pattern[r]&&pattern[r][c]) svg += `<rect x="${c*cell}" y="${r*cell}" width="${cell}" height="${cell}" fill="#1A1A16"/>`;
+  }
+  svg += '</svg>';
+  return svg;
+}
+
+function completeUpiPayment() {
+  const id = Math.floor(Math.random() * 900000 + 100000);
+  document.getElementById('orderId').textContent = id;
+  document.getElementById('successPayMethod').textContent = '💳 Paid via UPI — Thank you!';
+  finishOrder();
+}
+
+function processCOD() {
+  const id = Math.floor(Math.random() * 900000 + 100000);
+  document.getElementById('orderId').textContent = id;
+  document.getElementById('successPayMethod').textContent = '💵 Cash on Delivery — Pay when it arrives.';
+  finishOrder();
+}
+
+function finishOrder() {
+  cartItems = []; cartTotal = 0;
+  document.getElementById('cart-count').textContent = 0;
+  const cartBox = document.getElementById('cartBox');
+  if (cartBox) { cartBox.style.display = 'none'; document.getElementById('cartItems').innerHTML = ''; document.getElementById('cartTotal').textContent = '0'; document.getElementById('cartItemCount').textContent = '0'; }
+  document.querySelectorAll('.btn-sm.btn-green').forEach(b => { if(b.textContent === '✓ Added') { b.textContent = 'Add to Cart'; b.style.background = ''; } });
+  goCheckoutStep('success');
+  showToast('🎉 Order placed successfully!');
+}
+
+// ── FAQ ──
+const faqs = [
+  { q:'How does the crop scanning feature work?', a:'KrishiNetra uses a Convolutional Neural Network (CNN) trained on 50,000+ crop images. Upload a photo, and the model detects crop type, health status, and any diseases within seconds.', tags:['scan','AI','CNN'] },
+  { q:'What inputs does the yield prediction model need?', a:'The Random Forest model requires: average temperature, seasonal rainfall, soil pH, nitrogen content, phosphorus, humidity, and field area. All parameters can be entered in the Yield Prediction dashboard.', tags:['yield','model'] },
+  { q:'How accurate is the yield prediction?', a:'Our Random Forest Regression model achieves 94% accuracy (R² = 0.94) on the validation dataset of 15,000 Indian farm records across Karnataka, Maharashtra, Punjab, and UP.', tags:['accuracy','yield'] },
+  { q:'Can I use KrishiNetra offline?', a:'The AI inference requires internet connectivity as models run on our backend servers. However, you can view cached reports and historical predictions offline.', tags:['offline','connectivity'] },
+  { q:'How do I pay for fertilizers?', a:'We support UPI (GPay, PhonePe, Paytm), Credit/Debit Cards, Net Banking, and Cash on Delivery. All transactions are encrypted with 256-bit SSL.', tags:['payment','fertilizer','shop'] },
+  { q:'Is my farm data private?', a:'Yes. All farm data is encrypted at rest and in transit. We never share individual farm data with third parties. Aggregate anonymized data may be used to improve our models.', tags:['privacy','data','security'] },
+  { q:'Which crops are supported for scanning?', a:'Currently 38 crop varieties including Rice, Wheat, Maize, Ragi, Groundnut, Sugarcane, Cotton, Soybean, Sunflower, Tomato, Potato, Onion, and more. New crops are added monthly.', tags:['crops','scan','supported'] },
+  { q:'How do I interpret the suitability score for crop suggestions?', a:'Suitability scores (0–100%) are calculated using your local climate data, soil type, historical yield patterns, and current market prices. Scores above 75% indicate excellent crop-field compatibility.', tags:['suitability','crops','score'] },
+  { q:'What should I do if the scan shows a disease?', a:'The report includes specific treatment recommendations. Generally: remove infected plant material, apply recommended fungicide/pesticide, adjust irrigation, and rescan in 7 days to verify improvement.', tags:['disease','treatment','scan'] },
+  { q:'How do I update my soil data?', a:'Go to Dashboard → Settings → Soil Profile. You can manually enter NPK values or connect with our partner soil testing labs for automatic data sync.', tags:['soil','settings','data'] },
+];
+
+function initFAQ() {
+  const list = document.getElementById('faqList');
+  if (list.innerHTML) return;
+  list.innerHTML = faqs.map((f, i) => `
+    <div class="faq-item" data-q="${f.q.toLowerCase()} ${f.tags.join(' ')}">
+      <div class="faq-q" onclick="toggleFAQ(${i})">
+        <span>${f.q}</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        ${f.tags.map(t => `<span class="faq-tag">${t}</span>`).join('')}
+        <p style="margin-top:8px">${f.a}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleFAQ(i) {
+  const items = document.querySelectorAll('.faq-item');
+  items[i].classList.toggle('open');
+}
+
+function filterFAQ(query) {
+  const items = document.querySelectorAll('.faq-item');
+  const q = query.toLowerCase().trim();
+  let visible = 0;
+  items.forEach(item => {
+    const match = !q || item.dataset.q.includes(q);
+    item.style.display = match ? 'block' : 'none';
+    if (match) visible++;
+  });
+  document.getElementById('noResults').style.display = (visible === 0 && q) ? 'block' : 'none';
+}
+
+// ── CHAT ──
+const chatResponses = {
+  'rice': 'Rice thrives in Karnataka during Kharif (June–Nov). Ideal conditions: temp 22–32°C, pH 5.5–6.5, well-drained clay loam. For Kharif, transplanting in late June gives best results. Apply DAP at 100kg/ha basal dose.',
+  'wheat': 'Wheat is best sown in Rabi season (Oct–Feb) in North India. Ideal temp: 15–25°C. Use NPK 120:60:40 kg/ha. Varieties like HD-2967 and GW-322 perform well in Karnataka conditions.',
+  'yellow': 'Yellow leaves often indicate: (1) Nitrogen deficiency — apply urea 50kg/ha, (2) Iron deficiency — spray ferrous sulphate 0.5%, (3) Bacterial leaf blight — apply copper fungicide. Use the Scan feature for accurate diagnosis.',
+  'fertilizer': 'For balanced nutrition: apply NPK as per soil test. General recommendation: 120kg N, 60kg P2O5, 40kg K2O per hectare for rice. Split nitrogen in 3 doses: basal, tillering, panicle initiation.',
+  'water': 'Irrigation schedule depends on crop stage. Rice: maintain 2–5cm water at tillering. Wheat: 5–6 irrigations at CRI, tillering, jointing, flowering, grain filling. Use moisture sensors for precision irrigation.',
+  'pest': 'Common pests: stem borer (use Chlorpyrifos 2.5ml/L), aphids (Imidacloprid 0.3ml/L), whitefly (neem oil 5ml/L). Scout fields weekly. Apply pesticides in early morning or late evening.',
+  'default': "Great question! I specialize in crop management, soil health, and yield optimization for Indian farming. Could you be more specific? You can ask about: crop diseases, fertilizer dosages, irrigation schedules, or market prices."
+};
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  addChatMsg(msg, 'user');
+  input.value = '';
+  setTimeout(() => {
+    const lower = msg.toLowerCase();
+    let response = chatResponses.default;
+    for (const key in chatResponses) {
+      if (lower.includes(key)) { response = chatResponses[key]; break; }
+    }
+    addChatMsg(response, 'bot');
+  }, 600);
+}
+
+function addChatMsg(text, type) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `chat-msg ${type}`;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── CROP PLAN MODAL ──
+function openCropPlan(name, sci, suit, yld, water, price, window, soilTypes, fertilizer, issues, solutions) {
+  document.getElementById('planCropName').textContent = '📋 Crop Plan: ' + name;
+  document.getElementById('planLocation').textContent = document.getElementById('filter-location').value;
+  document.getElementById('planSeason').textContent = document.getElementById('filter-season').value;
+  document.getElementById('planSoil').textContent = document.getElementById('filter-soil').value;
+  document.getElementById('planScientific').textContent = sci;
+  document.getElementById('planSuit').textContent = suit + '%';
+  document.getElementById('planYield').textContent = yld;
+  document.getElementById('planWater').textContent = water;
+  document.getElementById('planPrice').textContent = price;
+  document.getElementById('planWindow').textContent = window;
+  document.getElementById('planSoilType').textContent = soilTypes;
+  document.getElementById('planFertilizer').textContent = fertilizer;
+  document.getElementById('planIssues').textContent = issues;
+  document.getElementById('planSolutions').textContent = solutions;
+  document.getElementById('planModal').classList.add('open');
+}
+
+function closePlanModal() {
+  document.getElementById('planModal').classList.remove('open');
+}
+
+function updateCropSuggestions() {
+  const loc = document.getElementById('filter-location').value;
+  const season = document.getElementById('filter-season').value;
+  showToast(`📍 Showing crops for ${loc} — ${season}`);
+}
+
+// ── INIT ──
+updateAuthUI();
+if (zone) {
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--green-400)'; });
+  zone.addEventListener('dragleave', () => zone.style.borderColor = '');
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.style.borderColor = ''; const f = e.dataTransfer.files[0]; if (f) { handleUpload({ target: { files: [f] } }); } });
+}
+</script>
+</body>
+</html>
